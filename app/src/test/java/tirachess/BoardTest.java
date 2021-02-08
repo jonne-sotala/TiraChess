@@ -2,6 +2,8 @@ package tirachess;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +50,83 @@ public class BoardTest {
                 assertTrue(b.board[col][Board.rows - 1] == Board.BKing);
             }
         }
-
     }
 
+    @Test
+    public void testBoardGetMovesMethodGivesCorrectMovesAtStart() {
+        ArrayList<Board> moves = b.getMoves();
+        assertEquals(20, moves.size());
+    }
+
+    @Test
+    public void testIsOnBoardMethodGivesFalseWhenSquareOutside() {
+        assertFalse(b.isOnBoard(10, 7));
+        assertFalse(b.isOnBoard(-1, 2));
+        assertFalse(b.isOnBoard(5, 11));
+    }
+
+    @Test
+    public void testIsOnBoardMethodGivesTrueWhenSquareInside() {
+        assertTrue(b.isOnBoard(5, 5));
+        assertTrue(b.isOnBoard(1, 7));
+        assertTrue(b.isOnBoard(4, 2));
+    }
+
+    @Test
+    public void testIsEmptyWorksCorrectly() {
+        assertTrue(b.isEmpty(b.board[4][4]));
+        assertFalse(b.isEmpty(b.board[0][0]));
+    }
+
+    @Test
+    public void testIsWhitePieceMethodWorksCorrectly() {
+        assertTrue(b.isWhitePiece(b.board[5][0]));
+        assertFalse(b.isWhitePiece(b.board[4][3]));
+        assertFalse(b.isWhitePiece(b.board[4][7]));
+    }
+
+    @Test
+    public void testIsBlackPieceMethodWorksCorrectly() {
+        assertFalse(b.isBlackPiece(b.board[5][0]));
+        assertFalse(b.isBlackPiece(b.board[4][3]));
+        assertTrue(b.isBlackPiece(b.board[4][7]));
+    }
+
+    @Test
+    public void testIsSameColorMethodWorksCorrectly() {
+        assertTrue(b.isSameColor(b.board[2][0], b.board[5][1]));
+        assertFalse(b.isSameColor(b.board[3][0], b.board[5][7]));
+        assertFalse(b.isSameColor(b.board[2][0], b.board[5][3]));
+    }
+
+    @Test
+    public void testIsCurrentPlayersPieceWorksCorrectly() {
+        assertTrue(b.isCurrentPlayersPiece(b.board[1][1]));
+        assertFalse(b.isCurrentPlayersPiece(b.board[1][3]));
+        assertFalse(b.isCurrentPlayersPiece(b.board[1][7]));
+
+        b.whitesMove = false;
+        assertFalse(b.isCurrentPlayersPiece(b.board[1][1]));
+        assertFalse(b.isCurrentPlayersPiece(b.board[1][3]));
+        assertTrue(b.isCurrentPlayersPiece(b.board[1][7]));
+    }
+
+    @Test
+    public void testPieceIsAttackedMethodWorksCorrectly() {
+        b.board[4][1] = Board.WQueen;
+        b.board[4][6] = Board.Empty;
+        assertTrue(b.pieceIsAttacked(Board.BKing));
+        assertFalse(b.pieceIsAttacked(Board.WKing));
+    }
+
+    @Test
+    public void testGetCloneAndChangeTurnWorksCorrectly() {
+        Board new_board = b.getCloneAndChangeTurn();
+        assertTrue(new_board.whitesMove != b.whitesMove);
+        for (int r = 0; r < Board.rows; r++) {
+            for (int c = 0; c < Board.cols; c++) {
+                assertTrue(b.board[c][r] == new_board.board[c][r]);
+            }
+        }
+    }
 }
