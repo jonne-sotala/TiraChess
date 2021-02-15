@@ -10,8 +10,9 @@ The purpose of this project is to create a simple chess AI in Java.
 - Alpha-beta pruning
 - Iterative deepening
 - Transposition tables
-- Hash tables
 - Board evaluation
+- Hash tables
+- Arraylists
 
 ## Problem 
 

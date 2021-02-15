@@ -2,131 +2,204 @@ package tirachess;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import tirachess.datastructures.MyArrayList;
+import tirachess.domain.Position;
+
 public class BoardTest {
 
-    private Board b;
+    private Position p;
 
     @Before
     public void setUp() throws Exception {
-        b = new Board();
-        b.setUpBoard();
+        p = new Position();
     }
 
     @Test
     public void testBoardHasRightSize() {
-        assertEquals(8, b.board.length);
-        assertEquals(8, b.board[0].length);
+        assertEquals(8, p.board.length);
+        assertEquals(8, p.board[0].length);
     }
 
     @Test
     public void testWhiteStartsOnBoard() {
-        assertEquals(true, b.whitesMove);
+        assertEquals(true, p.whitesMove);
     }
 
     @Test
     public void testBoardStartingPositionIsCorrect() {
-        for (int col = 0; col < Board.cols; col++) {
-            assertTrue(b.board[col][1] == Board.WPawn);
-            assertTrue(b.board[col][Board.rows - 2] == Board.BPawn);
-            if (col == 0 || col == Board.cols - 1) {
-                assertTrue(b.board[col][0] == Board.WRook);
-                assertTrue(b.board[col][Board.rows - 1] == Board.BRook);
-            } else if (col == 1 || col == Board.cols - 2) {
-                assertTrue(b.board[col][0] == Board.WKnight);
-                assertTrue(b.board[col][Board.rows - 1] == Board.BKnight);
-            } else if (col == 2 || col == Board.cols - 3) {
-                assertTrue(b.board[col][0] == Board.WBishop);
-                assertTrue(b.board[col][Board.rows - 1] == Board.BBishop);
+        for (int col = 0; col < Position.cols; col++) {
+            assertTrue(p.board[col][1] == Position.WPawn);
+            assertTrue(p.board[col][Position.rows - 2] == Position.BPawn);
+            if (col == 0 || col == Position.cols - 1) {
+                assertTrue(p.board[col][0] == Position.WRook);
+                assertTrue(p.board[col][Position.rows - 1] == Position.BRook);
+            } else if (col == 1 || col == Position.cols - 2) {
+                assertTrue(p.board[col][0] == Position.WKnight);
+                assertTrue(p.board[col][Position.rows - 1] == Position.BKnight);
+            } else if (col == 2 || col == Position.cols - 3) {
+                assertTrue(p.board[col][0] == Position.WBishop);
+                assertTrue(p.board[col][Position.rows - 1] == Position.BBishop);
             } else if (col == 3) {
-                assertTrue(b.board[col][0] == Board.WQueen);
-                assertTrue(b.board[col][Board.rows - 1] == Board.BQueen);
+                assertTrue(p.board[col][0] == Position.WQueen);
+                assertTrue(p.board[col][Position.rows - 1] == Position.BQueen);
             } else if (col == 4) {
-                assertTrue(b.board[col][0] == Board.WKing);
-                assertTrue(b.board[col][Board.rows - 1] == Board.BKing);
+                assertTrue(p.board[col][0] == Position.WKing);
+                assertTrue(p.board[col][Position.rows - 1] == Position.BKing);
             }
         }
     }
 
     @Test
-    public void testBoardGetMovesMethodGivesCorrectMovesAtStart() {
-        ArrayList<Board> moves = b.getMoves();
+    public void testBoardGetMovesMethodGivesCorrectMovesAtStartForWhite() {
+        MyArrayList<Position> moves = p.getMoves();
         assertEquals(20, moves.size());
     }
 
     @Test
+    public void testBoardGetMovesMethodGivesCorrectMovesAtStartForBlack() {
+        p.whitesMove = !p.whitesMove;
+        MyArrayList<Position> moves = p.getMoves();
+        assertEquals(20, moves.size());
+    }
+
+    @Test
+    public void testGetKingMoves() {
+        for (int i = 1; i < Position.cols - 1; i++) {
+            if (i == 4) {
+                continue;
+            }
+            p.board[i][0] = Position.Empty;
+            p.board[i][Position.rows - 1] = Position.Empty;
+        }
+        MyArrayList<Position> moves = new MyArrayList<Position>();
+        p.getKingMoves(0, 4, moves);
+        assertEquals(4, moves.size());
+        p.whitesMove = !p.whitesMove;
+        moves.clear();
+        p.getKingMoves(7, 4, moves);
+        assertEquals(4, moves.size());
+    }
+
+    @Test
+    public void testGetSpecialPawnMovesForWhite() {
+        p.board[4][4] = Position.WPawn;
+        p.board[2][4] = Position.WPawn;
+        p.board[3][6] = Position.Empty;
+        p.board[3][4] = Position.BPawn;
+
+        p.board[0][6] = Position.WPawn;
+        p.board[0][7] = Position.Empty;
+        p.enPassantFile = 3;
+        MyArrayList<Position> moves = new MyArrayList<>();
+        p.getPawnMoves(6, 0, moves);
+        p.getEnPassantMoves(moves);
+        assertEquals(10, moves.size());
+    }
+
+    @Test
+    public void testGetSpecialPawnMovesForBlack() {
+        p.whitesMove = !p.whitesMove;
+        p.board[4][3] = Position.BPawn;
+        p.board[2][3] = Position.BPawn;
+        p.board[3][1] = Position.Empty;
+        p.board[3][3] = Position.WPawn;
+
+        p.board[0][1] = Position.BPawn;
+        p.board[0][0] = Position.Empty;
+        p.enPassantFile = 3;
+        MyArrayList<Position> moves = new MyArrayList<Position>();
+        p.getPawnMoves(1, 0, moves);
+        p.getEnPassantMoves(moves);
+        assertEquals(10, moves.size());
+    }
+
+    @Test
     public void testIsOnBoardMethodGivesFalseWhenSquareOutside() {
-        assertFalse(b.isOnBoard(10, 7));
-        assertFalse(b.isOnBoard(-1, 2));
-        assertFalse(b.isOnBoard(5, 11));
+        assertFalse(p.isOnBoard(10, 7));
+        assertFalse(p.isOnBoard(-1, 2));
+        assertFalse(p.isOnBoard(5, 11));
     }
 
     @Test
     public void testIsOnBoardMethodGivesTrueWhenSquareInside() {
-        assertTrue(b.isOnBoard(5, 5));
-        assertTrue(b.isOnBoard(1, 7));
-        assertTrue(b.isOnBoard(4, 2));
+        assertTrue(p.isOnBoard(5, 5));
+        assertTrue(p.isOnBoard(1, 7));
+        assertTrue(p.isOnBoard(4, 2));
     }
 
     @Test
     public void testIsEmptyWorksCorrectly() {
-        assertTrue(b.isEmpty(b.board[4][4]));
-        assertFalse(b.isEmpty(b.board[0][0]));
+        assertTrue(p.isEmpty(p.board[4][4]));
+        assertFalse(p.isEmpty(p.board[0][0]));
     }
 
     @Test
     public void testIsWhitePieceMethodWorksCorrectly() {
-        assertTrue(b.isWhitePiece(b.board[5][0]));
-        assertFalse(b.isWhitePiece(b.board[4][3]));
-        assertFalse(b.isWhitePiece(b.board[4][7]));
+        assertTrue(p.isWhitePiece(p.board[5][0]));
+        assertFalse(p.isWhitePiece(p.board[4][3]));
+        assertFalse(p.isWhitePiece(p.board[4][7]));
     }
 
     @Test
     public void testIsBlackPieceMethodWorksCorrectly() {
-        assertFalse(b.isBlackPiece(b.board[5][0]));
-        assertFalse(b.isBlackPiece(b.board[4][3]));
-        assertTrue(b.isBlackPiece(b.board[4][7]));
+        assertFalse(p.isBlackPiece(p.board[5][0]));
+        assertFalse(p.isBlackPiece(p.board[4][3]));
+        assertTrue(p.isBlackPiece(p.board[4][7]));
     }
 
     @Test
     public void testIsSameColorMethodWorksCorrectly() {
-        assertTrue(b.isSameColor(b.board[2][0], b.board[5][1]));
-        assertFalse(b.isSameColor(b.board[3][0], b.board[5][7]));
-        assertFalse(b.isSameColor(b.board[2][0], b.board[5][3]));
+        assertTrue(p.isSameColor(p.board[2][0], p.board[5][1]));
+        assertFalse(p.isSameColor(p.board[3][0], p.board[5][7]));
+        assertFalse(p.isSameColor(p.board[2][0], p.board[5][3]));
     }
 
     @Test
     public void testIsCurrentPlayersPieceWorksCorrectly() {
-        assertTrue(b.isCurrentPlayersPiece(b.board[1][1]));
-        assertFalse(b.isCurrentPlayersPiece(b.board[1][3]));
-        assertFalse(b.isCurrentPlayersPiece(b.board[1][7]));
+        assertTrue(p.isCurrentPlayersPiece(p.board[1][1]));
+        assertFalse(p.isCurrentPlayersPiece(p.board[1][3]));
+        assertFalse(p.isCurrentPlayersPiece(p.board[1][7]));
 
-        b.whitesMove = false;
-        assertFalse(b.isCurrentPlayersPiece(b.board[1][1]));
-        assertFalse(b.isCurrentPlayersPiece(b.board[1][3]));
-        assertTrue(b.isCurrentPlayersPiece(b.board[1][7]));
+        p.whitesMove = false;
+        assertFalse(p.isCurrentPlayersPiece(p.board[1][1]));
+        assertFalse(p.isCurrentPlayersPiece(p.board[1][3]));
+        assertTrue(p.isCurrentPlayersPiece(p.board[1][7]));
     }
 
     @Test
     public void testPieceIsAttackedMethodWorksCorrectly() {
-        b.board[4][1] = Board.WQueen;
-        b.board[4][6] = Board.Empty;
-        assertTrue(b.pieceIsAttacked(Board.BKing));
-        assertFalse(b.pieceIsAttacked(Board.WKing));
+        p.board[4][1] = Position.WQueen;
+        p.board[4][6] = Position.Empty;
+        assertTrue(p.pieceIsAttacked(Position.BKing));
+        assertFalse(p.pieceIsAttacked(Position.WKing));
     }
 
     @Test
     public void testGetCloneAndChangeTurnWorksCorrectly() {
-        Board new_board = b.getCloneAndChangeTurn();
-        assertTrue(new_board.whitesMove != b.whitesMove);
-        for (int r = 0; r < Board.rows; r++) {
-            for (int c = 0; c < Board.cols; c++) {
-                assertTrue(b.board[c][r] == new_board.board[c][r]);
+        Position new_board = p.getCloneAndChangeTurn();
+        assertTrue(new_board.whitesMove != p.whitesMove);
+        for (int r = 0; r < Position.rows; r++) {
+            for (int c = 0; c < Position.cols; c++) {
+                assertTrue(p.board[c][r] == new_board.board[c][r]);
             }
         }
+    }
+
+    @Test
+    public void testPrint() {
+        PrintStream oldOut = System.out;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(baos));
+        p.print();
+        System.setOut(oldOut);
+        String output = new String(baos.toByteArray());
+        assertTrue(output.contains(("r n b q k b n r")));
+        assertTrue(output.contains(("R N B Q K B N R")));
     }
 }

@@ -1,7 +1,9 @@
 
 package tirachess;
 
-import java.util.ArrayList;
+import tirachess.datastructures.MyArrayList;
+import tirachess.domain.Position;
+import tirachess.domain.Evaluator;
 
 /**
  * The main class.
@@ -13,33 +15,41 @@ public class Main {
      * testing purposes.
      */
     public static void main(String[] args) {
-        Board board = new Board();
+        Position p = new Position();
         System.out.println("GAME START!");
-        board.print();
+        p.print();
         Evaluator evaluator = new Evaluator();
-        ArrayList<Board> moves = board.getMoves();
+        MyArrayList<Position> moves = p.getMoves();
         while (!moves.isEmpty()) {
-            Board bestMove = moves.get(0);
+            Position bestMove = moves.get(0);
             Double bestEval = evaluator.alphabeta(bestMove, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-            for (Board move : moves) {
+            for (int i = 0; i < moves.size(); i++) {
+                Position move = moves.get(i);
                 Double moveEval = evaluator.alphabeta(move, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-                if (board.whitesMove && moveEval > bestEval) {
+                if (p.whitesMove && moveEval > bestEval) {
                     bestMove = move;
                     bestEval = moveEval;
-                } else if (!board.whitesMove && moveEval < bestEval) {
+                } else if (!p.whitesMove && moveEval < bestEval) {
                     bestMove = move;
                     bestEval = moveEval;
                 }
             }
-            if (board.whitesMove) {
+            if (p.fullMoveCounter % 10 == 1) {
+                System.out.println(p.fullMoveCounter + "st move");
+            } else if (p.fullMoveCounter % 10 == 2) {
+                System.out.println(p.fullMoveCounter + "nd move");
+            } else {
+                System.out.println(p.fullMoveCounter + "th move");
+            }
+            if (p.whitesMove) {
                 System.out.println("White's evaluation: " + bestEval);
             } else {
                 System.out.println("Blacks's evaluation: " + bestEval);
             }
-            board.print();
+            p = bestMove;
+            p.print();
             System.out.println();
-            board = bestMove;
-            moves = board.getMoves();
+            moves = p.getMoves();
         }
         System.out.println("GAME ENDED!");
     }
