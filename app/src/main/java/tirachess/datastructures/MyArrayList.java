@@ -9,7 +9,7 @@ public class MyArrayList<E> {
 
     /**
      * Constructor that creates the instance of the class. Default size of the
-     * initial array is 8;
+     * initial array is 8.
      */
     public MyArrayList() {
         this.size = 0;

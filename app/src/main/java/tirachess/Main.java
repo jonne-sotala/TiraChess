@@ -2,6 +2,7 @@
 package tirachess;
 
 import tirachess.datastructures.MyArrayList;
+import tirachess.datastructures.MyHashMap;
 import tirachess.domain.Position;
 import tirachess.domain.Evaluator;
 
@@ -19,6 +20,7 @@ public class Main {
         System.out.println("GAME START!");
         p.print();
         Evaluator evaluator = new Evaluator();
+
         MyArrayList<Position> moves = p.getMoves();
         while (!moves.isEmpty()) {
             Position bestMove = moves.get(0);
@@ -42,9 +44,9 @@ public class Main {
                 System.out.println(p.fullMoveCounter + "th move");
             }
             if (p.whitesMove) {
-                System.out.println("White's evaluation: " + bestEval);
+                System.out.println("White's evaluation: " + bestEval/100);
             } else {
-                System.out.println("Blacks's evaluation: " + bestEval);
+                System.out.println("Blacks's evaluation: " + bestEval/100);
             }
             p = bestMove;
             p.print();
