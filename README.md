@@ -9,6 +9,7 @@ A simple chess AI in Java.
 - [Week 3](./documentation/weekly-reports/week-3.md)
 - [Week 4](./documentation/weekly-reports/week-4.md)
 - [Week 5](./documentation/weekly-reports/week-5.md)
+- [Week 6](./documentation/weekly-reports/week-6.md)
 
 ## Documentation
 
