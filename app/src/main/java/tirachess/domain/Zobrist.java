@@ -7,10 +7,10 @@ import java.security.SecureRandom;
  * https://www.chessprogramming.org/Zobrist_Hashing.
  */
 public class Zobrist {
-    long[][][] zBoard;
-    long[] zCastling;
-    long[] zEnPassant;
-    long zBlackMove;
+    long[][][] zobristBoard;
+    long[] zobristCastling;
+    long[] zobristEnPassant;
+    long zobristBlackMove;
 
     /**
      * Consructor that that creates pseudorandom numbers for the Zobrist class.
@@ -18,23 +18,23 @@ public class Zobrist {
      */
     public Zobrist() {
         SecureRandom random = new SecureRandom();
-        zBoard = new long[8][8][12];
-        zCastling = new long[4];
-        zEnPassant = new long[8];
+        zobristBoard = new long[8][8][12];
+        zobristCastling = new long[4];
+        zobristEnPassant = new long[8];
         for (int piece = 0; piece < 12; piece++) {
             for (int col = 0; col < 8; col++) {
                 for (int row = 0; row < 8; row++) {
-                    zBoard[col][row][piece] = random.nextLong();
+                    zobristBoard[col][row][piece] = random.nextLong();
                 }
             }
         }
         for (int i = 0; i < 4; i++) {
-            zCastling[i] = random.nextLong();
+            zobristCastling[i] = random.nextLong();
         }
         for (int i = 0; i < 8; i++) {
-            zEnPassant[i] = random.nextLong();
+            zobristEnPassant[i] = random.nextLong();
         }
-        zBlackMove = random.nextLong();
+        zobristBlackMove = random.nextLong();
     }
 
     /**
@@ -52,29 +52,29 @@ public class Zobrist {
                     continue;
                 }
                 int piece = p.board[c][r];
-                zHash ^= zBoard[c][r][piece - 1];
+                zHash ^= zobristBoard[c][r][piece - 1];
             }
         }
 
         if (p.whiteKingSideCastlingAllowed) {
-            zHash ^= zCastling[0];
+            zHash ^= zobristCastling[0];
         }
         if (p.whiteQueenSideCastlingAllowed) {
-            zHash ^= zCastling[1];
+            zHash ^= zobristCastling[1];
         }
         if (p.blackKingSideCastlingAllowed) {
-            zHash ^= zCastling[2];
+            zHash ^= zobristCastling[2];
         }
         if (p.blackQueenSideCastlingAllowed) {
-            zHash ^= zCastling[3];
+            zHash ^= zobristCastling[3];
         }
 
         if (p.enPassantFile != -1) {
-            zHash ^= zEnPassant[p.enPassantFile];
+            zHash ^= zobristEnPassant[p.enPassantFile];
         }
 
         if (!p.whitesMove) {
-            zHash ^= zBlackMove;
+            zHash ^= zobristBlackMove;
         }
 
         return zHash;

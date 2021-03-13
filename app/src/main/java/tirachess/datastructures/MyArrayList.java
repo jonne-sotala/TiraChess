@@ -20,7 +20,7 @@ public class MyArrayList<E> {
      * Adds a new element to the ArrayList. If the inner array isn't large enough,
      * it will extend it.
      * 
-     * @param position Position that will be added to the ArrayList.
+     * @param e The element that will be added to the ArrayList.
      */
     public void add(E e) {
         if (this.size == this.elements.length) {
@@ -68,6 +68,21 @@ public class MyArrayList<E> {
      */
     public int size() {
         return this.size;
+    }
+
+    /**
+     *  This method tells whether the given object in the ArrayList.
+     * 
+     * @param o The object to find from the ArrayList.
+     * @return boolean Return true if the ArrayList contains the given object.
+     */
+    public boolean contains(Object o) {
+        for (int i = 0; i < this.size; i++) {
+            if (this.elements[i].equals(o)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

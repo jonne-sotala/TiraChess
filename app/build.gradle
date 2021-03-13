@@ -57,4 +57,9 @@ application {
     mainClass = 'tirachess.Main'
 }
 
+run {
+    standardInput = System.in
+}
+
+
 check.dependsOn jacocoTestReport

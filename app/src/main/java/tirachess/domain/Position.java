@@ -27,18 +27,29 @@ public class Position {
     public static final int BKnight = 11;
     public static final int BPawn = 12;
 
-    private static final int[] Nx = { -2, -2, -1, -1, 1, 1, 2, 2 };
-    private static final int[] Ny = { 1, -1, 2, -2, 2, -2, 1, -1 };
-    private static final int[][] Bx = { { 1, 2, 3, 4, 5, 6, 7 }, { 1, 2, 3, 4, 5, 6, 7 },
-            { -1, -2, -3, -4, -5, -6, -7 }, { -1, -2, -3, -4, -5, -6, -7 } };
-    private static final int[][] By = { { 1, 2, 3, 4, 5, 6, 7 }, { -1, -2, -3, -4, -5, -6, -7 },
-            { 1, 2, 3, 4, 5, 6, 7 }, { -1, -2, -3, -4, -5, -6, -7 } };
-    private static final int[][] Rx = { { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 1, 2, 3, 4, 5, 6, 7 },
-            { -1, -2, -3, -4, -5, -6, -7 } };
-    private static final int[][] Ry = { { 1, 2, 3, 4, 5, 6, 7 }, { -1, -2, -3, -4, -5, -6, -7 },
-            { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
-    private static final int[] Kx = { 1, 1, 1, 0, 0, -1, -1, -1 };
-    private static final int[] Ky = { 1, 0, -1, 1, -1, 1, 0, -1 };
+    private static final int[] Kx = {  1,  1,  1,  0,  0, -1, -1, -1 };
+    private static final int[] Ky = {  1,  0, -1,  1, -1,  1,  0, -1 };
+
+    private static final int[] Nx = { -2, -2, -1, -1,  1,  1,  2,  2 };
+    private static final int[] Ny = {  1, -1,  2, -2,  2, -2,  1, -1 };
+
+    private static final int[][] Bx = { {  1,  2,  3,  4,  5,  6,  7 }, 
+                                        {  1,  2,  3,  4,  5,  6,  7 },
+                                        { -1, -2, -3, -4, -5, -6, -7 }, 
+                                        { -1, -2, -3, -4, -5, -6, -7 } };
+    private static final int[][] By = { {  1,  2,  3,  4,  5,  6,  7 }, 
+                                        { -1, -2, -3, -4, -5, -6, -7 },
+                                        {  1,  2,  3,  4,  5,  6,  7 }, 
+                                        { -1, -2, -3, -4, -5, -6, -7 } };
+
+    private static final int[][] Rx = { {  0,  0,  0,  0,  0,  0,  0 }, 
+                                        {  0,  0,  0,  0,  0,  0,  0 }, 
+                                        {  1,  2,  3,  4,  5,  6,  7 },
+                                        { -1, -2, -3, -4, -5, -6, -7 } };
+    private static final int[][] Ry = { {  1,  2,  3,  4,  5,  6,  7 }, 
+                                        { -1, -2, -3, -4, -5, -6, -7 },
+                                        {  0,  0,  0,  0,  0,  0,  0 }, 
+                                        {  0,  0,  0,  0,  0,  0,  0 } };
 
     public boolean whitesMove;
     public int halfMoveCounter;
@@ -249,8 +260,9 @@ public class Position {
         }
         // CASTLING
         int king = this.board[c][r];
-        if (this.isWhitePiece(king) && this.whiteQueenSideCastlingAllowed && this.squareIsEmpty(r, c - 1)
-                && this.squareIsEmpty(r, c - 2) && this.squareIsEmpty(r, c - 3)) {
+        if (this.isWhitePiece(king) && this.whiteQueenSideCastlingAllowed 
+                && this.squareIsEmpty(r, c - 1) && this.squareIsEmpty(r, c - 2) 
+                && this.squareIsEmpty(r, c - 3)) {
             this.board[c - 1][r] = king;
             this.board[c - 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -267,8 +279,8 @@ public class Position {
             this.board[c - 1][r] = Position.Empty;
             this.board[c - 2][r] = Position.Empty;
         }
-        if (this.isWhitePiece(king) && this.whiteKingSideCastlingAllowed && this.squareIsEmpty(r, c + 1)
-                && this.squareIsEmpty(r, c + 2)) {
+        if (this.isWhitePiece(king) && this.whiteKingSideCastlingAllowed 
+                && this.squareIsEmpty(r, c + 1) && this.squareIsEmpty(r, c + 2)) {
             this.board[c + 1][r] = king;
             this.board[c + 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -285,8 +297,9 @@ public class Position {
             this.board[c + 1][r] = Position.Empty;
             this.board[c + 2][r] = Position.Empty;
         }
-        if (this.isBlackPiece(king) && this.blackQueenSideCastlingAllowed && this.squareIsEmpty(r, c - 1)
-                && this.squareIsEmpty(r, c - 2) && this.squareIsEmpty(r, c - 3)) {
+        if (this.isBlackPiece(king) && this.blackQueenSideCastlingAllowed 
+                && this.squareIsEmpty(r, c - 1) && this.squareIsEmpty(r, c - 2) 
+                && this.squareIsEmpty(r, c - 3)) {
             this.board[c - 1][r] = king;
             this.board[c - 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -303,8 +316,8 @@ public class Position {
             this.board[c - 1][r] = Position.Empty;
             this.board[c - 2][r] = Position.Empty;
         }
-        if (this.isBlackPiece(king) && this.blackKingSideCastlingAllowed && this.squareIsEmpty(r, c + 1)
-                && this.squareIsEmpty(r, c + 2)) {
+        if (this.isBlackPiece(king) && this.blackKingSideCastlingAllowed 
+                && this.squareIsEmpty(r, c + 1) && this.squareIsEmpty(r, c + 2)) {
             this.board[c + 1][r] = king;
             this.board[c + 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -797,8 +810,9 @@ public class Position {
                         int piece1 = this.board[c][r];
                         int piece2 = this.board[c2][r2];
                         if (!this.isEmpty(piece2)) {
-                            if ((piece2 == Position.WQueen || piece2 == Position.BQueen || piece2 == Position.WRook
-                                    || piece2 == Position.BRook) && !this.isSameColor(piece1, piece2)) {
+                            if ((piece2 == Position.WQueen || piece2 == Position.BQueen 
+                                    || piece2 == Position.WRook || piece2 == Position.BRook) 
+                                    && !this.isSameColor(piece1, piece2)) {
                                 return true;
                             }
                             break;
@@ -816,8 +830,9 @@ public class Position {
                         int piece1 = this.board[c][r];
                         int piece2 = this.board[c2][r2];
                         if (!this.isEmpty(piece2)) {
-                            if ((piece2 == Position.WQueen || piece2 == Position.BQueen || piece2 == Position.WBishop
-                                    || piece2 == Position.BBishop) && !this.isSameColor(piece1, piece2)) {
+                            if ((piece2 == Position.WQueen || piece2 == Position.BQueen 
+                                    || piece2 == Position.WBishop || piece2 == Position.BBishop) 
+                                    && !this.isSameColor(piece1, piece2)) {
                                 return true;
                             }
                             break;
@@ -858,7 +873,8 @@ public class Position {
                     }
                     int piece1 = this.board[c][r];
                     int piece2 = this.board[c2][r2];
-                    if ((piece2 == Position.WKing || piece2 == Position.BKing) && !this.isSameColor(piece1, piece2)) {
+                    if ((piece2 == Position.WKing || piece2 == Position.BKing) 
+                        && !this.isSameColor(piece1, piece2)) {
                         return true;
                     }
                 }
@@ -883,9 +899,15 @@ public class Position {
         }
         Position newPosition;
         if (this.whitesMove) {
-            newPosition = new Position(newBoard, !this.whitesMove, this.halfMoveCounter + 1, this.fullMoveCounter);
+            newPosition = new Position(newBoard, 
+                                       !this.whitesMove, 
+                                       this.halfMoveCounter + 1, 
+                                       this.fullMoveCounter);
         } else {
-            newPosition = new Position(newBoard, !this.whitesMove, this.halfMoveCounter + 1, this.fullMoveCounter + 1);
+            newPosition = new Position(newBoard, 
+                                       !this.whitesMove, 
+                                       this.halfMoveCounter + 1, 
+                                       this.fullMoveCounter + 1);
 
         }
         newPosition.whiteKingSideCastlingAllowed = this.whiteKingSideCastlingAllowed;
@@ -936,7 +958,7 @@ public class Position {
      * Sets the board to be equivalent to the given board. The given board is
      * expected to be a 8x8 array.
      * 
-     * @param int[8][8] The board position that is imported.
+     * @param board The board position that is imported.
      */
     public void importBoard(int[][] board) {
         for (int r = 0; r < 8; r++) {
@@ -944,6 +966,21 @@ public class Position {
                 this.board[c][r] = board[c][r];
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        
+        if (!(o instanceof Position)) {
+            return false;
+        }
+
+        Position p = (Position) o;
+
+        return this.getZHash() == p.getZHash();
     }
 
 }

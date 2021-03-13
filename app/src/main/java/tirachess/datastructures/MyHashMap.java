@@ -37,8 +37,8 @@ public class MyHashMap<K, V> {
      * Adds a new Entry to the HashMap. If the count of Entries in the HashMap has 
      * reached 75% of its capacity, then the array is extended. 
      * 
-     * @param K key The key that will be used to search for the object.
-     * @param V value The value that will be stored to the HashMap.
+     * @param key The key that will be used to search for the object.
+     * @param value The value that will be stored to the HashMap.
      */
     public void put(K key, V value) {
         if (size >= 0.75 * this.capacity) {
@@ -120,11 +120,11 @@ public class MyHashMap<K, V> {
      */
     @SuppressWarnings("unchecked")
     private void extend() {
-        Entry<K, V>[] old_entries = this.entries;
         this.size = 0;
         this.capacity *= 2;
+        Entry<K, V>[] oldEntries = this.entries;
         this.entries = new Entry[this.capacity];
-        for (Entry<K, V> entry : old_entries) {
+        for (Entry<K, V> entry : oldEntries) {
             while (entry != null) {
                 this.put(entry.key, entry.value);
                 entry = entry.next;

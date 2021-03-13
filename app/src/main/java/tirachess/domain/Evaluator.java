@@ -180,50 +180,50 @@ public class Evaluator {
     /**
      * This method evaluates a game board state.
      * 
-     * @param b The board state that will be evaluated
+     * @param p The board state that will be evaluated
      * @return double This returns a evaluation value where positive is advantages
      *         for white and negative is advantages for black.
      */
-    public double evaluate(Position b) {
+    public double evaluate(Position p) {
         double eval = 0.0;
         for (int r = 0; r < Position.rows; r++) {
             for (int c = 0; c < Position.cols; c++) {
-                if (b.board[c][r] == Position.Empty) {
+                if (p.board[c][r] == Position.Empty) {
                     continue;
-                } else if (b.board[c][r] == Position.WKing) {
+                } else if (p.board[c][r] == Position.WKing) {
                     eval += 20000;
                     eval += Evaluator.WKing[r][c];
-                } else if (b.board[c][r] == Position.WQueen) {
+                } else if (p.board[c][r] == Position.WQueen) {
                     eval += 900;
                     eval += Evaluator.WQueen[r][c];
-                } else if (b.board[c][r] == Position.WRook) {
+                } else if (p.board[c][r] == Position.WRook) {
                     eval += 500;
                     eval += Evaluator.WRook[r][c];
-                } else if (b.board[c][r] == Position.WBishop) {
+                } else if (p.board[c][r] == Position.WBishop) {
                     eval += 330;
                     eval += Evaluator.WBishop[r][c];
-                } else if (b.board[c][r] == Position.WKnight) {
+                } else if (p.board[c][r] == Position.WKnight) {
                     eval += 320;
                     eval += Evaluator.WKnight[r][c];
-                } else if (b.board[c][r] == Position.WPawn) {
+                } else if (p.board[c][r] == Position.WPawn) {
                     eval += 100;
                     eval += Evaluator.WPawn[r][c];
-                } else if (b.board[c][r] == Position.BKing) {
+                } else if (p.board[c][r] == Position.BKing) {
                     eval -= 20000;
                     eval -= Evaluator.BKing[r][c];
-                } else if (b.board[c][r] == Position.BQueen) {
+                } else if (p.board[c][r] == Position.BQueen) {
                     eval -= 900;
                     eval -= Evaluator.BQueen[r][c];
-                } else if (b.board[c][r] == Position.BRook) {
+                } else if (p.board[c][r] == Position.BRook) {
                     eval -= 500;
                     eval -= Evaluator.BRook[r][c];
-                } else if (b.board[c][r] == Position.BBishop) {
+                } else if (p.board[c][r] == Position.BBishop) {
                     eval -= 330;
                     eval -= Evaluator.BBishop[r][c];
-                } else if (b.board[c][r] == Position.BKnight) {
+                } else if (p.board[c][r] == Position.BKnight) {
                     eval -= 320;
                     eval -= Evaluator.BKnight[r][c];
-                } else if (b.board[c][r] == Position.BPawn) {
+                } else if (p.board[c][r] == Position.BPawn) {
                     eval -= 100;
                     eval -= Evaluator.BPawn[r][c];
                 }

@@ -6,9 +6,16 @@ import tirachess.datastructures.MyArrayList;
 
 public class PerformanceTester {
 
+    /**
+     * A constructor.
+     */
     public PerformanceTester() {
     }
 
+    /**
+     * A method that compares the speed of the custom arraylist compared to the Java 
+     * implementation. 
+     */
     public void testMyArrayList() {
         // MyArrayList
         Long[] myTimes = new Long[10];
