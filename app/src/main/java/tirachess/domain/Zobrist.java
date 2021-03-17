@@ -7,10 +7,10 @@ import java.security.SecureRandom;
  * https://www.chessprogramming.org/Zobrist_Hashing.
  */
 public class Zobrist {
-    long[][][] zobristBoard;
-    long[] zobristCastling;
-    long[] zobristEnPassant;
-    long zobristBlackMove;
+    private long[][][] zobristBoard;
+    private long[] zobristCastling;
+    private long[] zobristEnPassant;
+    private long zobristBlackMove;
 
     /**
      * Consructor that that creates pseudorandom numbers for the Zobrist class.

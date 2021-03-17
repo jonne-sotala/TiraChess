@@ -28,7 +28,7 @@ The application requires you to have [java](https://docs.oracle.com/en/java/java
 
 Application can be run using command:
 ```
-gradle run
+gradle run --console plain
 ```
 
 ### Testing

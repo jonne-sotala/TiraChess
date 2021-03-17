@@ -4,10 +4,11 @@ package tirachess.domain;
 import java.util.HashMap;
 
 import tirachess.datastructures.MyArrayList;
+import tirachess.datastructures.MyHashMap;
 
 /**
- * Board is a class that represents a chess board and keeps track of the
- * different positions in a chess game.
+ *  A class that represents a chess position and its different variables. It also takes
+ *  care of move generation. 
  */
 public class Position {
     public int[][] board;
@@ -210,11 +211,10 @@ public class Position {
                     this.getKnightMoves(r, c, moves);
                 } else if (piece == Position.WPawn || piece == Position.BPawn) {
                     this.getPawnMoves(r, c, moves);
-                    this.getEnPassantMoves(moves);
                 }
-
             }
         }
+        this.getEnPassantMoves(moves);
         for (int i = 0; i < moves.size(); i++) {
             moves.get(i).updatePastPositions();
         }
@@ -262,7 +262,7 @@ public class Position {
         int king = this.board[c][r];
         if (this.isWhitePiece(king) && this.whiteQueenSideCastlingAllowed 
                 && this.squareIsEmpty(r, c - 1) && this.squareIsEmpty(r, c - 2) 
-                && this.squareIsEmpty(r, c - 3)) {
+                && this.squareIsEmpty(r, c - 3) && this.board[0][0] == Position.WRook) {
             this.board[c - 1][r] = king;
             this.board[c - 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -280,7 +280,8 @@ public class Position {
             this.board[c - 2][r] = Position.Empty;
         }
         if (this.isWhitePiece(king) && this.whiteKingSideCastlingAllowed 
-                && this.squareIsEmpty(r, c + 1) && this.squareIsEmpty(r, c + 2)) {
+                && this.squareIsEmpty(r, c + 1) && this.squareIsEmpty(r, c + 2)
+                && this.board[7][0] == Position.WRook) {
             this.board[c + 1][r] = king;
             this.board[c + 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -299,7 +300,7 @@ public class Position {
         }
         if (this.isBlackPiece(king) && this.blackQueenSideCastlingAllowed 
                 && this.squareIsEmpty(r, c - 1) && this.squareIsEmpty(r, c - 2) 
-                && this.squareIsEmpty(r, c - 3)) {
+                && this.squareIsEmpty(r, c - 3) && this.board[0][7] == Position.BRook) {
             this.board[c - 1][r] = king;
             this.board[c - 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -317,7 +318,8 @@ public class Position {
             this.board[c - 2][r] = Position.Empty;
         }
         if (this.isBlackPiece(king) && this.blackKingSideCastlingAllowed 
-                && this.squareIsEmpty(r, c + 1) && this.squareIsEmpty(r, c + 2)) {
+                && this.squareIsEmpty(r, c + 1) && this.squareIsEmpty(r, c + 2)
+                && this.board[7][7] == Position.BRook) {
             this.board[c + 1][r] = king;
             this.board[c + 2][r] = king;
             if (!this.pieceIsAttacked(king)) {
@@ -842,7 +844,8 @@ public class Position {
                 // PAWN ATTACKS
                 if (this.isWhitePiece(this.board[c][r])) {
                     int r2 = r + 1;
-                    for (int c2 = -1; c2 <= 1; c2 += 2) {
+                    for (int i = -1; i <= 1; i += 2) {
+                        int c2 = c + i;
                         if (!this.isOnBoard(r2, c2)) {
                             continue;
                         }
@@ -853,7 +856,8 @@ public class Position {
                     }
                 } else {
                     int r2 = r - 1;
-                    for (int c2 = -1; c2 <= 1; c2 += 2) {
+                    for (int i = -1; i <= 1; i += 2) {
+                        int c2 = c + i;
                         if (!this.isOnBoard(r2, c2)) {
                             continue;
                         }
@@ -968,6 +972,133 @@ public class Position {
         }
     }
 
+    /**
+     * Sets the position to be equal to the given FEN string. 
+     * https://www.chessprogramming.org/Forsyth-Edwards_Notation
+     * 
+     * @param fen The FEN string. There are no checks whether the given FEN string is valid.
+     */
+    public void importFEN(String fen) {
+        MyHashMap<Character, Integer> pieces = new MyHashMap<>();
+        pieces.put('r', Position.BRook);
+        pieces.put('n', Position.BKnight);
+        pieces.put('b', Position.BBishop);
+        pieces.put('q', Position.BQueen);
+        pieces.put('k', Position.BKing);
+        pieces.put('p', Position.BPawn);
+        pieces.put('R', Position.WRook);
+        pieces.put('N', Position.WKnight);
+        pieces.put('B', Position.WBishop);
+        pieces.put('Q', Position.WQueen);
+        pieces.put('K', Position.WKing);
+        pieces.put('P', Position.WPawn);
+        String[] array = fen.split(" ");
+        for (int i = 0; i < array.length; i++) {
+            if (i == 0) {
+                int row = 7;
+                int col = 0;
+                String str = array[i];
+                for (int j = 0; j < str.length(); j++) {
+                    char c = str.charAt(j);
+                    if (c == '/') {
+                        row--;
+                        col = 0;
+                    } else if (c == 'r') {
+                        this.board[col][row] = Position.BRook;
+                        col++;
+                    } else if (c == 'n') {
+                        this.board[col][row] = Position.BKnight;
+                        col++;
+                    } else if (c == 'b') {
+                        this.board[col][row] = Position.BBishop;
+                        col++;
+                    } else if (c == 'q') {
+                        this.board[col][row] = Position.BQueen;
+                        col++;
+                    } else if (c == 'k') {
+                        this.board[col][row] = Position.BKing;
+                        col++;
+                    } else if (c == 'p') {
+                        this.board[col][row] = Position.BPawn;
+                        col++;
+                    } else if (c == 'R') {
+                        this.board[col][row] = Position.WRook;
+                        col++;
+                    } else if (c == 'N') {
+                        this.board[col][row] = Position.WKnight;
+                        col++;
+                    } else if (c == 'B') {
+                        this.board[col][row] = Position.WBishop;
+                        col++;
+                    } else if (c == 'Q') {
+                        this.board[col][row] = Position.WQueen;
+                        col++;
+                    } else if (c == 'K') {
+                        this.board[col][row] = Position.WKing;
+                        col++;
+                    } else if (c == 'P') {
+                        this.board[col][row] = Position.WPawn;
+                        col++;
+                    } else {
+                        int countOfPawns = Character.getNumericValue(c);
+                        for (int k = 0; k < countOfPawns; k++) {
+                            this.board[col][row] = Position.Empty;
+                            col++;
+                        }
+                    }
+                }
+            } else if (i == 1) {
+                String str = array[i];
+                if (str.equals("w")) {
+                    this.whitesMove = true;
+                } else {
+                    this.whitesMove = false;
+                }
+            } else if (i == 2) {
+                this.blackKingSideCastlingAllowed = false;
+                this.blackQueenSideCastlingAllowed = false;
+                this.whiteKingSideCastlingAllowed = false;
+                this.whiteQueenSideCastlingAllowed = false;
+                String str = array[i];
+                if (str.contains("K")) {
+                    this.whiteKingSideCastlingAllowed = true;
+                }
+                if (str.contains("Q")) {
+                    this.whiteQueenSideCastlingAllowed = true;
+                }
+                if (str.contains("k")) {
+                    this.blackKingSideCastlingAllowed = true;
+                }
+                if (str.contains("q")) {
+                    this.blackQueenSideCastlingAllowed = true;
+                }
+            } else if (i == 3) {
+                String str = array[i];
+                if (str.equals("-")) {
+                    this.enPassantFile = -1;
+                } else {
+                    char file = str.charAt(0);
+                    String coordinates = "abcdefgh";
+                    this.enPassantFile = coordinates.indexOf(file);
+                }
+
+            } else if (i == 4) {
+                String str = array[i];
+                this.halfMoveCounter = Integer.parseInt(str);
+            } else if (i == 5) {
+                String str = array[i];
+                this.fullMoveCounter = Integer.parseInt(str);
+            }
+        }
+    }
+
+    /**
+     * This method overrides the equals method that is used to compare whether
+     * different objects are the same. 
+     * 
+     * @param o The other object this object is compared to. 
+     * @return boolean Return a truth value on whether the position is the same or not.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {

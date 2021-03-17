@@ -178,6 +178,58 @@ public class Evaluator {
     }
 
     /**
+     * This method is an implementation of a simple minmax algorithm without any optimizations. 
+     * 
+     * @param p The position that will be evaluated.
+     * @param depth The depth that the algorithm will search to. 
+     * 
+     * @return Position The best move that was found. 
+     */
+    public double minmax(Position p, int depth) {
+        if (p.halfMoveCounter >= 100 || p.threeFoldRepetition) {
+            return 0;
+        }
+
+        if (p.whitesMove) {
+            MyArrayList<Position> moves = p.getMoves();
+            if (moves.isEmpty()) {
+                if (p.pieceIsAttacked(Position.WKing)) {
+                    return Double.NEGATIVE_INFINITY;
+                } else {
+                    return 0;
+                }
+            }
+            if (depth == 0) {
+                return this.evaluate(p);
+            }
+            Double eval = Double.NEGATIVE_INFINITY;
+            for (int i = 0; i < moves.size(); i++) {
+                Position move = moves.get(i);
+                eval = Math.max(eval, this.minmax(move, depth - 1));
+            }
+            return eval;
+        } else {
+            MyArrayList<Position> moves = p.getMoves();
+            if (moves.isEmpty()) {
+                if (p.pieceIsAttacked(Position.BKing)) {
+                    return Double.POSITIVE_INFINITY;
+                } else {
+                    return 0;
+                }
+            }
+            if (depth == 0) {
+                return this.evaluate(p);
+            }
+            Double eval = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < moves.size(); i++) {
+                Position move = moves.get(i);
+                eval = Math.min(eval, this.minmax(move, depth - 1));
+            }
+            return eval;
+        }
+    }
+
+    /**
      * This method evaluates a game board state.
      * 
      * @param p The board state that will be evaluated

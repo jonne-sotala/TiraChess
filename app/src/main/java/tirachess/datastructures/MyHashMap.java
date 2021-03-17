@@ -1,7 +1,5 @@
 package tirachess.datastructures;
 
-import java.util.Objects;
-
 /**
  * A custom HashMap class.
  */
@@ -17,7 +15,6 @@ public class MyHashMap<K, V> {
     @SuppressWarnings("unchecked")
     public MyHashMap() {
         this.capacity = 32;
-        System.out.println(this.capacity);
         this.entries = new Entry[this.capacity];
     }
 
@@ -46,7 +43,7 @@ public class MyHashMap<K, V> {
         }
 
         Entry<K, V> entry = new Entry<>(key, value, null);
-        int index = getHash(key) % this.capacity;
+        int index = Math.abs(getHash(key) % this.capacity);
 
         Entry<K, V> current = this.entries[index];
         if (current == null) {
@@ -76,7 +73,7 @@ public class MyHashMap<K, V> {
      * @return V value that was stored behind the key. 
      */
     public V get(K key) {
-        Entry<K, V> entry = this.entries[getHash(key) % this.capacity];
+        Entry<K, V> entry = this.entries[Math.abs(getHash(key) % this.capacity)];
         while (entry != null) {
             if (key == entry.key) {
                 return entry.value;
@@ -153,63 +150,6 @@ public class MyHashMap<K, V> {
             this.value = value;
             this.next = next;
         }
-
-        /**
-         * Return the key.
-         * 
-         * @return K key.
-         */
-        public K getKey() {
-            return key;
-        }
-
-        /**
-         * Return the element/value.
-         * 
-         * @return V value.
-         */
-        public V getValue() {
-            return value;
-        }
-
-        /**
-         * Returns a boolean on whether the given object is the same as this.
-         * 
-         * @param object The object that this object is compared with. 
-         * @return boolean Returns true if the object is same as this.
-         */
-        @Override
-        public boolean equals(Object object) {
-            if (object == this) {
-                return true;
-            }
-            if (object instanceof Entry) {
-                Entry entry = (Entry) object;
-                return key.equals(entry.getKey()) && value.equals(entry.getValue());
-            }
-            return false;
-        }
-
-        /**
-         * Returns a hashcode of the Entry object.
-         * 
-         * @return int returns the hashcode of the object.
-         */
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.key, this.value);
-        }
-
-        /**
-         * Returns the string representation of the object.
-         * 
-         * @return String Returns the string representation.
-         */
-        @Override
-        public String toString() {
-            return "{" + key + ", " + value + "}";
-        }
-
     }
 }
 

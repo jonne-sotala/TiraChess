@@ -11,6 +11,11 @@ import org.junit.Test;
 import tirachess.datastructures.MyArrayList;
 import tirachess.domain.Position;
 
+/**
+ * The tests for the class Position. The FEN positions have been taken from 
+ * https://www.chessprogramming.org/Perft_Results. I used the first, the second
+ * and the fifth position for my tests. 
+ */
 public class PositionTest {
 
     private Position position;
@@ -18,6 +23,76 @@ public class PositionTest {
     @Before
     public void setUp() throws Exception {
         position = new Position();
+    }
+
+    private int countMoves(Position p, int depth) {
+        if (depth == 0) {
+            return 1;
+        }
+        int numOfMoves = 0;
+        MyArrayList<Position> moves = p.getMoves();
+        for (int i = 0; i < moves.size(); i++) {
+            numOfMoves += countMoves(moves.get(i), depth - 1);
+        }
+        
+        return numOfMoves;
+
+    }
+
+    @Test
+    public void testMoveGenerationPosition1Depth1() {
+        String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        position.importFEN(fen);
+        assertEquals(20, countMoves(position, 1));
+    }
+
+    @Test
+    public void testMoveGenerationPosition1Depth2() {
+        String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        position.importFEN(fen);
+        assertEquals(400, countMoves(position, 2));
+    }
+
+    @Test
+    public void testMoveGenerationPosition1Depth3() {
+        String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        position.importFEN(fen);
+        assertEquals(8902, countMoves(position, 3));
+    }
+
+    @Test
+    public void testMoveGenerationPosition1Depth4() {
+        String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        position.importFEN(fen);
+        assertEquals(197281, countMoves(position, 4));
+    }
+
+    @Test
+    public void testMoveGenerationPosition2Depth1() {
+        String fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
+        position.importFEN(fen);
+        assertEquals(48, countMoves(position, 1));
+    }
+
+    @Test
+    public void testMoveGenerationPosition2Depth2() {
+        String fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
+        position.importFEN(fen);
+        assertEquals(2039, countMoves(position, 2));
+    }
+
+    @Test
+    public void testMoveGenerationPosition2Depth3() {
+        String fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
+        position.importFEN(fen);
+        assertEquals(97862, countMoves(position, 3));
+    }
+
+    @Test
+    public void testMoveGenerationPosition5Depth3() {
+        String fen = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
+        position.importFEN(fen);
+        assertEquals(62379, countMoves(position, 3));
     }
 
     @Test
